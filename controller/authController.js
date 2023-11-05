@@ -2,13 +2,12 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const User = require('../models/userModel')
 
-const signup = (req,res) => {
-    console.log(req.body)
+const signup = (req, res) => {
     const user = new User({
         name: req.body.name,
         role: req.body.role,
         email: req.body.email,
-        password: bcrypt.hashSync(req.body.password,8),
+        password: bcrypt.hashSync(req.body.password, 8),
         storageUsed: 0,
         createdAt: new Date()
     })
@@ -25,11 +24,11 @@ const signup = (req,res) => {
     return
 }
 
-const signin = (req,res) => {
+const signin = (req, res) => {
     User.findOne({
         email: req.body.email
-    }).then((user)=>{
-        if(!user){
+    }).then((user) => {
+        if (!user) {
             res.status(404).send({
                 message: 'User not found'
             })
@@ -38,7 +37,7 @@ const signin = (req,res) => {
             req.body.password,
             user.password
         )
-        if(!isPasswordValid){
+        if (!isPasswordValid) {
             res.status(401).send({
                 accessToken: null,
                 message: 'Invalid Password'
@@ -46,7 +45,7 @@ const signin = (req,res) => {
         }
         const token = jwt.sign({
             id: user.id
-        },process.env.API_SECRET,{
+        }, process.env.API_SECRET, {
             expiresIn: 86400
         })
 
@@ -61,11 +60,11 @@ const signin = (req,res) => {
             accessToken: token
         })
     }).catch(err => {
-            res.status(500).send({
-                message: err
-            })
-            return
+        res.status(500).send({
+            message: err
         })
+        return
+    })
 }
 
-module.exports = {signin,signup}
+module.exports = { signin, signup }

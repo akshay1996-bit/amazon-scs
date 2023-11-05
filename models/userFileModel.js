@@ -34,6 +34,9 @@ const userFileSchema = new mongoose.Schema({
     diskFileName:{
         type: String,
         required: true
+    },
+    extension:{
+        type: String
     }
 })
 

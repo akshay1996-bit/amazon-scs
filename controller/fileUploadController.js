@@ -12,6 +12,7 @@ uploadFileRoute.use(bodyParser.json());
 uploadFileRoute.post("/", verifyToken, (req, res) => {
   upload(req, res, function (err) {
     const diskFileName = req.file.filename
+    const extension = req.file.originalname.split('.')[1]
     if (err instanceof multer.MulterError) {
       res.status(500).send({
         message: err.message,
@@ -38,7 +39,8 @@ uploadFileRoute.post("/", verifyToken, (req, res) => {
             version: version.length + 1,
             isCurrentVersion: isCurrentVersion,
             metadata: metadata,
-            diskFileName: diskFileName
+            diskFileName: diskFileName,
+            extension: extension
           });
           const pathDocs = splitPath(path, req.user._id.toString());
           pathModel.bulkWrite(
